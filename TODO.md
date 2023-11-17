@@ -1,0 +1,1 @@
+Organize the setup, don't pull everything in one function
