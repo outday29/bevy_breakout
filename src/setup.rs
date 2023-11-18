@@ -1,9 +1,9 @@
-use crate::constants::*;
 use crate::game_config::GameConfig;
 use crate::models::*;
 use crate::objects::ball::setup_ball;
 use crate::objects::brick::setup_brick;
 use crate::objects::paddle::setup_paddle;
+use crate::objects::wall::setup_wall;
 use crate::ui::game_state::setup_game_state_ui;
 use crate::ui::scoreboard::setup_scoreboard;
 use bevy::prelude::*;
@@ -23,15 +23,4 @@ pub fn setup(
     setup_wall(&mut commands, &mut materials, &game_config);
     setup_game_state_ui(&mut commands, &game_config);
     setup_paddle(&mut commands, &game_config);
-}
-
-fn setup_wall(
-    commands: &mut Commands,
-    materials: &mut ResMut<Assets<ColorMaterial>>,
-    game_config: &Res<GameConfig>,
-) {
-    commands.spawn(WallBundle::new(WallLocation::Left));
-    commands.spawn(WallBundle::new(WallLocation::Right));
-    commands.spawn(WallBundle::new(WallLocation::Bottom));
-    commands.spawn(WallBundle::new(WallLocation::Top));
 }

@@ -20,9 +20,9 @@ pub fn control_game_start(keyboard_input: Res<Input<KeyCode>>, mut game_state: R
 }
 
 pub fn check_game_over(
-    mut commands: Commands,
+    _commands: Commands,
     mut game_state: ResMut<GameState>,
-    mut ball_query: Query<&Ball>,
+    ball_query: Query<&Ball>,
 ) {
     if game_state.status == GameStatus::Running {
         if let Ok(_) = ball_query.get_single() {

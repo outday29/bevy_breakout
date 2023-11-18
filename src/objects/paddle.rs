@@ -2,7 +2,7 @@ use crate::constants::*;
 use crate::game_config::GameConfig;
 use crate::logic::controllable::Controllable;
 use crate::logic::physics::Collider;
-use crate::models::*;
+
 use bevy::prelude::*;
 
 #[derive(Component)]
@@ -39,7 +39,7 @@ pub fn setup_paddle(commands: &mut Commands, game_config: &Res<GameConfig>) {
 
 pub fn constrain_paddle(
     mut paddle_query: Query<&mut Transform, With<Paddle>>,
-    game_config: Res<GameConfig>,
+    _game_config: Res<GameConfig>,
 ) {
     let mut paddle = paddle_query.single_mut();
     let left_bound = LEFT_WALL + WALL_THICKNESS / 2.0 + PADDLE_SIZE.x / 2.0 + PADDLE_PADDING;

@@ -35,11 +35,12 @@ pub fn setup_ball(
 
 pub fn fade_away(
     mut commands: Commands,
-    mut materials: ResMut<Assets<ColorMaterial>>,
-    mut query: Query<(Entity, &mut Ball), With<Ball>>,
+    _materials: ResMut<Assets<ColorMaterial>>,
+    query: Query<(Entity, &mut Ball), With<Ball>>,
 ) {
-    let (mut entity, mut ball) = query.single_mut();
-    if ball.is_dead {
-        commands.entity(entity).despawn();
+    for (entity, ball) in query.iter() {
+        if ball.is_dead {
+            commands.entity(entity).despawn();
+        }
     }
 }

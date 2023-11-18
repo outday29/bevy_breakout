@@ -1,7 +1,4 @@
-use bevy::{
-    prelude::*,
-    sprite::collide_aabb::{collide, Collision},
-};
+use bevy::prelude::*;
 mod constants;
 mod game_config;
 mod game_state;
@@ -22,8 +19,8 @@ use constants::*;
 use game_config::*;
 use game_state::*;
 use logic::controllable::move_controllable;
-use logic::general::control_game_start;
-use logic::physics::{apply_velocity, check_for_collisions, Collider, CollisionEvent};
+use logic::general::{check_game_over, control_game_start};
+use logic::physics::{apply_velocity, check_for_collisions, CollisionEvent};
 use models::*;
 use objects::ball::*;
 use objects::paddle::*;
@@ -52,6 +49,7 @@ fn main() {
             Update,
             (
                 control_game_start,
+                check_game_over,
                 constrain_paddle,
                 update_scoreboard,
                 update_game_state_ui,
