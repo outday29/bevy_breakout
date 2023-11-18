@@ -60,12 +60,13 @@ impl Default for GameStateColor {
     }
 }
 
+
 #[derive(Resource)]
 pub struct GameConfig {
     pub paddle_config: PaddleConfig,
     pub brick_config: BrickConfig,
     pub ball_config: BallConfig,
-    pub game_state_color: GameStateColor,
+    pub game_state_color: GameStateColor
 }
 
 impl Default for GameConfig {

@@ -2,18 +2,6 @@ use crate::constants::*;
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct Paddle;
-
-#[derive(Component, Deref, DerefMut)]
-pub struct Velocity(pub Vec2);
-
-#[derive(Component)]
-pub struct Collider;
-
-#[derive(Event, Default)]
-pub struct CollisionEvent;
-
-#[derive(Component)]
 pub struct Brick;
 
 #[derive(Component)]

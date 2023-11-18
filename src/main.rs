@@ -11,12 +11,23 @@ mod objects;
 mod setup;
 mod ui;
 
+mod prelude {
+    pub use crate::constants::*;
+    pub use crate::game_config::*;
+    pub use crate::game_state::*;
+    pub use crate::models::*;
+}
+
+
 use constants::*;
 use game_config::*;
 use game_state::*;
 use logic::general::control_game_start;
+use logic::physics::check_for_collisions;
+use logic::controllable::move_controllable;
 use models::*;
 use objects::ball::*;
+use objects::paddle::*;
 use setup::setup;
 use ui::game_state::update_game_state_ui;
 use ui::scoreboard::update_scoreboard;
@@ -34,7 +45,7 @@ fn main() {
         // which runs at 64 Hz by default
         .add_systems(
             FixedUpdate,
-            (apply_velocity, move_paddle, check_for_collisions)
+            (apply_velocity, move_controllable, check_for_collisions)
                 // `chain`ing systems together runs them in order
                 .chain(),
         )
@@ -42,14 +53,15 @@ fn main() {
             Update,
             (
                 control_game_start,
+                constrain_paddle,
                 update_scoreboard,
                 update_game_state_ui,
+                fade_away,
                 bevy::window::close_on_esc,
             ),
         )
         .run();
 }
-
 
 fn apply_velocity(
     mut query: Query<(&mut Transform, &Velocity)>,
@@ -60,61 +72,6 @@ fn apply_velocity(
         for (mut transform, velocity) in &mut query {
             transform.translation.x += velocity.x * time.delta_seconds();
             transform.translation.y += velocity.y * time.delta_seconds();
-        }
-    }
-}
-
-fn check_for_collisions(
-    mut commands: Commands,
-    mut scoreboard: ResMut<Scoreboard>,
-    mut ball_query: Query<(&mut Velocity, &Transform), With<Ball>>,
-    collider_query: Query<(Entity, &Transform, Option<&Brick>), With<Collider>>,
-    mut collision_events: EventWriter<CollisionEvent>,
-) {
-    let (mut ball_velocity, ball_transform) = ball_query.single_mut();
-    let ball_size = ball_transform.scale.truncate();
-
-    // check collision with walls
-    for (collider_entity, transform, maybe_brick) in &collider_query {
-        let collision = collide(
-            ball_transform.translation,
-            ball_size,
-            transform.translation,
-            transform.scale.truncate(),
-        );
-        if let Some(collision) = collision {
-            // Sends a collision event so that other systems can react to the collision
-            collision_events.send_default();
-
-            // Bricks should be despawned and increment the scoreboard on collision
-            if maybe_brick.is_some() {
-                scoreboard.score += 1;
-                commands.entity(collider_entity).despawn();
-            }
-
-            // reflect the ball when it collides
-            let mut reflect_x = false;
-            let mut reflect_y = false;
-
-            // only reflect if the ball's velocity is going in the opposite direction of the
-            // collision
-            match collision {
-                Collision::Left => reflect_x = ball_velocity.x > 0.0,
-                Collision::Right => reflect_x = ball_velocity.x < 0.0,
-                Collision::Top => reflect_y = ball_velocity.y < 0.0,
-                Collision::Bottom => reflect_y = ball_velocity.y > 0.0,
-                Collision::Inside => { /* do nothing */ }
-            }
-
-            // reflect velocity on the x-axis if we hit something on the x-axis
-            if reflect_x {
-                ball_velocity.x = -ball_velocity.x;
-            }
-
-            // reflect velocity on the y-axis if we hit something on the y-axis
-            if reflect_y {
-                ball_velocity.y = -ball_velocity.y;
-            }
         }
     }
 }

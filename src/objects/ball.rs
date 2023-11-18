@@ -1,5 +1,5 @@
-use crate::game_config::GameConfig;
-use crate::models::*;
+use crate::logic::physics::Velocity;
+use crate::prelude::*;
 use bevy::prelude::*;
 use bevy::sprite::MaterialMesh2dBundle;
 
@@ -9,7 +9,9 @@ const BALL_SIZE: Vec3 = Vec3::new(30.0, 30.0, 0.0);
 const BALL_COLOR: Color = Color::rgb(1.0, 0.1, 0.1);
 
 #[derive(Component)]
-pub struct Ball;
+pub struct Ball {
+    pub is_dead: bool,
+}
 
 pub fn setup_ball(
     commands: &mut Commands,
@@ -24,7 +26,7 @@ pub fn setup_ball(
             transform: Transform::from_translation(BALL_STARTING_POSITION).with_scale(BALL_SIZE),
             ..default()
         },
-        Ball,
+        Ball { is_dead: false },
         Velocity(
             game_config.ball_config.initial_direction.normalize() * game_config.ball_config.speed,
         ),
@@ -34,8 +36,10 @@ pub fn setup_ball(
 pub fn fade_away(
     mut commands: Commands,
     mut materials: ResMut<Assets<ColorMaterial>>,
-    mut query: Query<Entity, With<Ball>>,
+    mut query: Query<(Entity, &mut Ball), With<Ball>>,
 ) {
-    let mut ball = query.single_mut();
-    commands.entity(ball).despawn();
+    let (mut entity, mut ball) = query.single_mut();
+    if ball.is_dead {
+        commands.entity(entity).despawn();
+    }
 }

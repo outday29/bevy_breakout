@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Eq)]
 pub enum GameStatus {
     Stopped,
     Running,

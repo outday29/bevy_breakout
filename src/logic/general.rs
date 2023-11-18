@@ -1,5 +1,5 @@
-use crate::game_state::{GameState, GameStatus};
 use bevy::prelude::*;
+use crate::prelude::*;
 
 pub fn control_game_start(keyboard_input: Res<Input<KeyCode>>, mut game_state: ResMut<GameState>) {
     if keyboard_input.just_pressed(KeyCode::Space) {
