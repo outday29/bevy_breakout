@@ -1,3 +1,4 @@
+use crate::objects::brick::Brick;
 use crate::objects::ball::Ball;
 use crate::prelude::*;
 use bevy::prelude::*;
@@ -63,6 +64,19 @@ pub fn check_for_collisions(
             if reflect_y {
                 ball_velocity.y = -ball_velocity.y;
             }
+        }
+    }
+}
+
+pub fn apply_velocity(
+    mut query: Query<(&mut Transform, &Velocity)>,
+    time: Res<Time>,
+    game_state: Res<GameState>,
+) {
+    if game_state.status == GameStatus::Running {
+        for (mut transform, velocity) in &mut query {
+            transform.translation.x += velocity.x * time.delta_seconds();
+            transform.translation.y += velocity.y * time.delta_seconds();
         }
     }
 }

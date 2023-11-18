@@ -1,8 +1,6 @@
 use crate::constants::*;
 use bevy::prelude::*;
-
-#[derive(Component)]
-pub struct Brick;
+use crate::logic::physics::Collider;
 
 #[derive(Component)]
 pub struct GameStopUI;

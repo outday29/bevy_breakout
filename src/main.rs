@@ -18,13 +18,12 @@ mod prelude {
     pub use crate::models::*;
 }
 
-
 use constants::*;
 use game_config::*;
 use game_state::*;
-use logic::general::control_game_start;
-use logic::physics::check_for_collisions;
 use logic::controllable::move_controllable;
+use logic::general::control_game_start;
+use logic::physics::{apply_velocity, check_for_collisions, Collider, CollisionEvent};
 use models::*;
 use objects::ball::*;
 use objects::paddle::*;
@@ -61,17 +60,4 @@ fn main() {
             ),
         )
         .run();
-}
-
-fn apply_velocity(
-    mut query: Query<(&mut Transform, &Velocity)>,
-    time: Res<Time>,
-    game_state: Res<GameState>,
-) {
-    if game_state.status == GameStatus::Running {
-        for (mut transform, velocity) in &mut query {
-            transform.translation.x += velocity.x * time.delta_seconds();
-            transform.translation.y += velocity.y * time.delta_seconds();
-        }
-    }
 }

@@ -1,6 +1,7 @@
 use crate::constants::*;
 use crate::game_config::GameConfig;
 use crate::logic::controllable::Controllable;
+use crate::logic::physics::Collider;
 use crate::models::*;
 use bevy::prelude::*;
 
